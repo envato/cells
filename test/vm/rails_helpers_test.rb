@@ -46,6 +46,22 @@ class UrlHelperTest < MiniTest::Spec
       render template_engine: :erb
     end
 
+    def erb_with_form_for_block_and_nested_bits
+      render template_engine: :erb
+    end
+
+    def erb_with_cell_rendering
+      render template_engine: :erb
+    end
+
+    def cell
+      SongCell.new(controller)
+    end
+
+    def some_value
+      true
+    end
+
   private
     def cap
       "yay, #{with_output_buffer { yield } }"
@@ -72,6 +88,10 @@ class UrlHelperTest < MiniTest::Spec
   it { cell.with_form_for_block.must_equal_xml_structure "<form><div><input/></div><input/></form>" }
   # form_for with block in ERB.
   it { cell.erb_with_form_for_block.must_equal_xml_structure "<form><div><input/></div><input/></form>" }
+  # form_for with block in ERB with nested content.
+  it { cell.erb_with_form_for_block_and_nested_bits.must_equal_xml_structure "<form><div><input/></div><input/><a><div></div></a><input/></form>" }
+  # form_for with block in ERB with nested content through another cell
+  it { cell.erb_with_cell_rendering.must_equal_xml_structure "<div><form><div><input/></div><input/><a><div></div></a><input/></form></div>" }
 
   # when using yield, haml breaks it (but doesn't escape HTML)
   it { cell.with_block.must_equal "Nice!\nyay, <b>yeah</b>\n" }

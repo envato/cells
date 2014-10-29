@@ -1,0 +1,11 @@
+<%= form_for(OpenStruct.new, url: "/songs", as: :song) do |f| %>
+  <%= f.text_field :id %>
+
+  <% if some_value %>
+    <%= link_to "/" do %>
+      <%= content_tag :div, "Hi There" %>
+    <% end %>
+  <% end %>
+
+  <%= f.text_field :name %>
+<% end %>
