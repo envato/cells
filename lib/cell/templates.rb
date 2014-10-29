@@ -2,14 +2,20 @@ module Cell
   # Gets cached in production.
   class Templates
     def [](bases, prefixes, view, engine, formats=nil)
-      base = bases.first # FIXME.
-
-      prefixes.find do |prefix|
-        template = find_for_engines(base, prefix, view, engine) and return template
-      end
+      cache["#{bases}.#{prefixes}.#{view}.#{engine}.#{formats}"] ||= template(bases, prefixes, view, engine, formats=nil)
     end
 
   private
+
+    def template(bases, prefixes, view, engine, formats=nil)
+      bases.each do |base|
+        prefixes.each do |prefix|
+          template = find_for_engines(base, prefix, view, engine) and return template
+        end
+      end
+
+      nil
+    end
 
     def cache
       @cache ||= {}
