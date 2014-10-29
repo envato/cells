@@ -31,11 +31,14 @@ module Cell
 
       template = vcache[prefix] and return template
 
-      puts "checking #{base}/#{prefix}/#{view}.#{engine}"
+      template_file = "#{base}/#{prefix}/#{view}.html.#{engine}"
+      unless File.exists?(template_file)
+        template_file = "#{base}/#{prefix}/#{view}.#{engine}"
+      end
 
-      return unless File.exists?("#{base}/#{prefix}/#{view}.#{engine}") # DISCUSS: can we use Tilt.new here?
+      return unless File.exists?(template_file)
 
-      template = Tilt.new("#{base}/#{prefix}/#{view}.#{engine}", :escape_html => false, :escape_attrs => false)
+      template = Tilt.new(template_file, :escape_html => false, :escape_attrs => false)
 
       vcache[prefix] = template
     end
