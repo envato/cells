@@ -11,8 +11,7 @@ module Erubis
       super
       @escapefunc ||= "Erubis::XmlHelper.escape_xml"
       @bufvar       = properties[:bufvar] || "_buf"
-      @in_block     = 0
-      @block_ignore = 0
+      @block_depth = []
     end
 
     def escaped_expr(code)
@@ -41,30 +40,33 @@ module Erubis
     end
 
     private
+
     def block_start? code
       res = code =~ /\b(do|\{)(\s*\|[^|]*\|)?\s*\Z/
     end
+
     def block_start
-      @in_block += 1
+      @block_depth << :start
       @bufvar << '_tmp'
     end
 
     def block_ignore
-      @block_ignore += 1
+      @block_depth << :ignore
     end
 
     def block_end? code
-      res = @in_block != 0 && code =~ /\bend\b|}/
-      if res && @block_ignore != 0
-        @block_ignore -= 1
+      block_state = @block_depth[-1]
+
+      res = block_state && code =~ /\bend\b|}/
+      if res && block_state == :ignore
         return false
       end
 
       res
     end
+
     def block_end
-      @in_block -= 1
-      @bufvar.sub! /_tmp\Z/, ''
+      @bufvar.sub! /_tmp\Z/, '' if @block_depth.pop == :start
     end
   end
 end
