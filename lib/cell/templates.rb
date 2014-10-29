@@ -39,8 +39,9 @@ module Cell
       return unless File.exists?(template_file)
 
       template = Tilt.new(template_file, :escape_html => false, :escape_attrs => false)
+      instrumented = Instrumentation::TemplateRendering.new(template)
 
-      vcache[prefix] = template
+      vcache[prefix] = instrumented
     end
   end
 end

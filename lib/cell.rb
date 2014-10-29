@@ -22,6 +22,7 @@ end
 
 require 'cell/caching'
 require 'cell/caching/notification'
+require 'cell/instrumentation/template_rendering'
 require 'uber/builder'
 require 'cell/prefixes'
 require 'cell/self_contained'
