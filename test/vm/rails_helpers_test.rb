@@ -62,6 +62,10 @@ class UrlHelperTest < MiniTest::Spec
       true
     end
 
+    def i_should_be_escaped
+      "<div>Iz in ur HTMLs escaping ur codes</div>"
+    end
+
   private
     def cap
       "yay, #{with_output_buffer { yield } }"
@@ -92,6 +96,8 @@ class UrlHelperTest < MiniTest::Spec
   it { cell.erb_with_form_for_block_and_nested_bits.must_equal_xml_structure "<form><div><input/></div><input/><a><div></div></a><input/></form>" }
   # form_for with block in ERB with nested content through another cell
   it { cell.erb_with_cell_rendering.must_equal_xml_structure "<div><form><div><input/></div><input/><a><div></div></a><input/></form></div>" }
+  # form_for with block in ERB with nested content through another cell with proper escaping of content
+  it { cell.erb_with_cell_rendering.must_include "&lt;div&gt;Iz in ur HTMLs escaping ur codes&lt;/div&gt;" }
 
   # when using yield, haml breaks it (but doesn't escape HTML)
   it { cell.with_block.must_equal "Nice!\nyay, <b>yeah</b>\n" }
