@@ -110,7 +110,7 @@ module Cell
       content  = template.render(self, options[:locals])
 
       # TODO: allow other (global) layout dirs.
-      with_layout(options[:layout], content)
+      with_layout(options[:layout], content).html_safe
     end
 
 
